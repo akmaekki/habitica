@@ -816,6 +816,8 @@ export default {
   },
   methods: {
     async loadUser () {
+      console.log('test-1');
+      // Wird aufgerufen, wenn Karte von anderem Mitglied einer Party geöffnet wird
       let user = this.userLoggedIn;
 
       // Reset editing when user is changed. Move to watch or is this good?

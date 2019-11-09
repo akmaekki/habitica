@@ -112,6 +112,7 @@ api.getMember = {
       .select(memberFields)
       .exec();
 
+    console.log('test-3');
     if (!member) throw new NotFound(res.t('userWithIDNotFound', { userId: memberId }));
 
     if (!member.flags.verifiedUsername) member.auth.local.username = null;
@@ -614,6 +615,7 @@ api.getChallengeMemberProgress = {
   },
 };
 
+// AK: ich sollte diesen Endpunkt benutzen, welcher allgemein gestaltet ist => auch studieren
 /**
  * @api {get} /api/v3/members/:toUserId/objections/:interaction Get objections to interaction
  * @apiDescription Get any objections that would occur
@@ -777,6 +779,30 @@ api.transferGems = {
     }
 
     res.respond(200, {});
+  },
+};
+
+api.getBlocksUser = {
+  method: 'GET',
+  url: '/members/:memberId/blockedby/:anotherMemberId',
+  middlewares: [],
+  async handler (req, res) {
+    req.checkParams('memberId', res.t('memberIdRequired')).notEmpty().isUUID();
+
+    const { memberId, anotherMemberId } = req.params;
+
+    const memberBlocking = await User
+      .findById(anotherMemberId)
+      .select('inbox.blocks')
+      .exec();
+
+    if (!memberBlocking) throw new NotFound(res.t('userWithIDNotFound', { userId: anotherMemberId }));
+
+    const isBlocking = memberBlocking.blocksMember(memberId);
+
+    res.respond(200, {
+      isBlocking,
+    });
   },
 };
 

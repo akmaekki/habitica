@@ -304,6 +304,7 @@ export default {
         if (Boolean(uuid) && !this.cachedProfileData[uuid] && !aboutToCache[uuid]) {
           if (uuid === 'system' || this.currentProfileLoadedCount === this.currentProfileLoadedEnd) return;
           aboutToCache[uuid] = {};
+          console.log('test-3 wird nicht aufgerufen');
           promises.push(axios.get(`/api/v4/members/${uuid}`));
           this.currentProfileLoadedCount += 1;
         }
@@ -338,6 +339,7 @@ export default {
 
       return false;
     },
+    // AK: Diese Methode wird aufgerufen wenn man auf die Karte des anderen Users der Gruppe geht
     async showMemberModal (memberId) {
       let profile = this.cachedProfileData[memberId];
 

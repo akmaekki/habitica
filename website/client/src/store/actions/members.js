@@ -25,7 +25,9 @@ export async function getGroupMembers (store, payload) {
   return response.data.data;
 }
 
+// AK: Diese Methode wird aufgerufen wenn man auf die Karte des anderen Users der Gruppe geht
 export async function fetchMember (store, payload) {
+  console.log('test-2');
   const url = `${apiv4Prefix}/members/${payload.memberId}`;
   const response = await axios.get(url);
   return response;

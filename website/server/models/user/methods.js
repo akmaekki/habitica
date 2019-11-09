@@ -502,3 +502,14 @@ schema.methods.toJSONWithInbox = async function userToJSONWithInbox () {
 
   return toJSON;
 };
+
+// Added by AK. Checks if user blocks some member
+schema.methods.blocksMember = function blocksMember (otherMemberId) {
+  const user = this;
+
+  if (user.inbox.blocks.includes(otherMemberId)) {
+    return true;
+  }
+
+  return false;
+};

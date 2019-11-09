@@ -139,6 +139,11 @@
           @message-removed="messageRemoved"
           @triggerLoad="infiniteScrollTrigger"
         />
+        <div id="pm-disallowed">
+          <p style="font-weight: bold; margin-bottom: 0;">You can not reply to this conversation</p>
+          <p>This user is no longer receiving private messages.</p>
+        </div>
+        <!--Das darunter könnte interessant sein-->
         <div
           v-if="user.inbox.optOut && selectedConversation.key"
           class="pm-disabled-caption text-center"
@@ -154,6 +159,7 @@
             v-model="newMessage"
             maxlength="3000"
             @keyup.ctrl.enter="sendPrivateMessage()"
+            :disabled="true"
           ></textarea>
           <button
             class="btn btn-secondary"
@@ -173,6 +179,11 @@
 <style lang="scss">
   #inbox-modal .modal-body {
     padding-top: 0px;
+  }
+  #pm-disallowed {
+    width: 100%;
+    text-align: center;
+    color: #a5a1ac;
   }
 </style>
 
@@ -491,6 +502,7 @@ export default {
       };
     },
     optTextSet () {
+      // AK: wird angezeigt
       if (!this.user.inbox.optOut) {
         return {
           switchDescription: this.$t('PMReceive'),

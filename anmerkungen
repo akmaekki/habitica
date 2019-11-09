@@ -1,0 +1,87 @@
+========================================================================================================================================================================================================
+ANALYSE AKTULLES ISSUE:
+
++) /Users/akremsner/workspace/habitica/website/client/src/components/userMenu/inbox.vue
++) /Users/akremsner/workspace/habitica/website/client/src/components/chat/chatMessages.vue
+
+Prüfen was im Datenmodell passiert, wenn ein User einen anderen sperrt. Ob dann diese Sperrung gleich synchronisiert wird,
+d.h. in den Daten vom gesperrten User das auch eingetragen wird. Was ich nämlich vermeiden will ist, das Senden eines Requests
+um zu prüfen, ob eine Sperrung vorliegt. Aber auf jeden Fall kann ich mir ansehen war beim Versenden einer Nachricht passiert.
+Ich sollte auch prüfen was alles geladen wird, wenn ein User die PMs öffnen, ob da noch Requests passieren.
+
+Query zum Finden der blockierten User:
+db.users.find({}, {'inbox.blocks': 1})
+
+Auch Tests schreiben!
+
+=> Tasks:
+1. Rückgabedaten bei Call von http://localhost:8080/api/v4/members/789cb00c-3018-4cf2-8d3c-3db667aa57ef um inbox.blocks erweitern. Gibt es Grund, warum man das nicht bereits tut?
+2. Fragen, ob man publicFields erweitern sollte. Ansonsten muss man einen weiteren Request abfeuern
+3. Logik überprüfen, denn Admins sollen noch immer anderen Nachrichten senden können! Dazu auch Test schreiben
+4. Message-Box sollte wohl ausgegraut und inaktiv sein, vielleicht muss man diese Funktionalität auch erst ergänzen
+
+========================================================================================================================================================================================================
+
+---------------
+It seems to be desirable that people should be able to change their party name without adding a description;
+Testuser:
+---------
+
+username: aktest
+password: fuckit123
+
+
+Issue 9786:
+- Erst einmal eine working solution implementieren
+- Eventuell die Lösung herzeigen
+- Dann die erste Lösung versuchen zu refactoren und zu verbessern
+- Muss mir noch etwas zu Singular/Plural überlegen, denn es wird angezeigt "Mehr anzeigen (1 Standard Haustiere)", was aber für Singular nicht korrekt ist. => Ich benötige also eine weitere Translation, will aber nicht alles für eine Sprache hinzufügen
+- Vielleicht Unit-Test schreiben?!
+
+--------------------------------------
+Schritte zum Starten der Anwendung:
+x) git checkout develop
+x) git fetch
+x) git rebase upstream/develop (https://habitica.fandom.com/wiki/Using_Your_Local_Install_to_Modify_Habitica%27s_Website_and_API)
+x) mongod --config /usr/local/etc/mongod.conf (zuvor eventuell 'killall mongod' verwenden)
+x) nvm use v12.10.0 (zuvor eventuell nvm ls)
+x) npm start (Alternativ in Intellij eine Run-Configuration für npm hinzufügen; dann kann man den Server einfach in Intellij starten und einen Breakpoint setzen!!!)
+x) npm run client:dev
+
+> db.users.update({'auth.local.username': 'aktest'}, { $set: {'items.pets.Wolf-Base': 1} })
+
+========================================================================================================================================================================================================
+
+AKTULLES ISSUE:
+---------------
+It seems to be desirable that people should be able to change their party name without adding a description;
+parties aren't public and descriptions aren't that important.
+
+1. fixen
+2. tests schreiben, mit und ohne beschreibung der party
+
+========================================================================================================================================================================================================
+
+Fragen:
+-------
+?) Warum kann man auf Client nicht zugreifen wenn keine Internetverbindung? Zumindest hat es auf Chrome nicht funktioniert, unter Safari und Curl jedoch schon;
+?) Was ist api.amplitude.com?
+?) Wie kann man im Output von MongoDB-Queries nach Text suchen?
+?) Mit Axios ein wenig beschätigen
+?) Muss man an die dispatch-Funktion des Stores wirklich einen String als Methodenname übergeben? Siehe  const response = await this.$store.dispatch('members:fetchMember', { memberId: profileUserId });
+?) abc
+?) Wie kann man von der Commandozeile aus einen node-Server im Debug-Modus starten?
+
+========================================================================================================================================================================================================
+
+ERKENNTNISSE:
+-------------
+x) Wenn man am Server etwas verändert, z.B. ein Statement 'console.log(***)' einfügt, dann muss man den Server neu starten 'npm start' um die Änderung zu sehen. Und die console.log Ausgabe sieht man nicht im Browser, sondern im Consolenfenster in welchem der Server gestartet wurde.
+
+========================================================================================================================================================================================================
+
+TODOS:
+-------------
+x) Auch für Client Run-Configuration in Intellij erstellen
+x) Run-Profile, also "Services", in Intellij hinzufügen
+x) Prüfen wie 'middlewares: [authWithHeaders()]' funktioniert, also diese Middleware
